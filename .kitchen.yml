@@ -1,0 +1,36 @@
+---
+driver:
+  name: dokken # see https://github.com/someara/kitchen-dokken
+  chef_version: 12.21.26
+  use_sudo: false
+  privileged: true # because Docker and SystemD/Upstart
+
+verifier:
+  name: inspec
+
+provisioner:
+  name: dokken
+  chef_log_level: info
+  client_rb:
+    treat_deprecation_warnings_as_errors: true
+    resource_cloning: false
+
+transport:
+  name: dokken
+
+platforms:
+  - name: debian-9
+    driver:
+      image:  dokken/debian-9
+      pid_one_command: /bin/systemd
+      intermediate_instructions:
+        - RUN /usr/bin/apt-get update
+        - RUN /usr/bin/apt-get install -y gnupg
+      platform: debian
+      hostname: t-ber1-testkitchen-001
+      publish_all: false
+
+suites:
+  - name: default
+    run_list:
+      - recipe[cookbook_dokken_example::default]
