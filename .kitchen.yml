@@ -34,3 +34,6 @@ suites:
   - name: default
     run_list:
       - recipe[cookbook_dokken_example::default]
+    attributes: { "dummy_attribute": "debian9"}
+    includes:
+      - debian-9
